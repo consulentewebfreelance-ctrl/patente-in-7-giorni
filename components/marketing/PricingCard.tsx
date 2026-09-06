@@ -8,7 +8,7 @@ import { cn } from '@/lib/utils';
 export const STRIPE_PAYMENT_LINKS: Record<string, string> = {
   base: 'https://buy.stripe.com/6oUbJ4b2afPhaQd8GIdQQ01',
   premium: 'https://buy.stripe.com/5kQeVgc6egTle2p9KMdQQ00',
-  pro: 'https://buy.stripe.com/STRIPE_PAYMENT_LINK_PRO',
+  pro: 'https://buy.stripe.com/eVqdRc1rAbz1e2pcWYdQQ02',
 };
 
 type Pacchetto = {

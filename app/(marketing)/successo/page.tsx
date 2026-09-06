@@ -1,27 +1,8 @@
-import type { Metadata } from 'next';
+'use client';
+import { useEffect } from 'react';
+import Link from 'next/link';
 import { CheckCircle2 } from 'lucide-react';
-import { ButtonLink } from '@/components/ui/Button';
-
-export const metadata: Metadata = {
-  title: 'Pagamento confermato',
-  robots: { index: false }, // pagina di post-checkout, non va indicizzata
-};
-
-/**
- * Fase 2/3, Schermata 7. URL di ritorno da impostare come "Success URL"
- * nel tuo Stripe Payment Link — vedi README, sezione "Dove inserire Stripe".
- */
-export default function SuccessoPage() {
-  return (
-    <div className="container-app flex min-h-[70vh] flex-col items-center justify-center gap-5 py-20 text-center">
-      <div className="flex h-16 w-16 animate-pop-in items-center justify-center rounded-full bg-superato/10 text-superato">
-        <CheckCircle2 className="h-9 w-9" strokeWidth={2} />
-      </div>
-      <h1 className="font-display text-[28px] font-bold md:text-[34px]">Benvenuto in Patente in 7 Giorni</h1>
-      <p className="max-w-[420px] text-[16px] text-ardesia">
-        Il pagamento è confermato, il tuo piano è pronto.
-      </p>
-      <ButtonLink href="/dashboard">Vai alla Dashboard</ButtonLink>
-    </div>
-  );
+export default function SuccessoPage(){
+ useEffect(()=>{localStorage.setItem('patente7_access','premium');},[]);
+ return (<main className="min-h-screen flex items-center justify-center p-6"><div className="max-w-md text-center"><CheckCircle2 className="mx-auto mb-4 h-16 w-16 text-green-500"/><h1 className="text-3xl font-bold mb-3">Pagamento confermato!</h1><p className="mb-6">Il tuo accesso Premium è stato sbloccato.</p><Link href="/dashboard" className="rounded-xl bg-blue-600 px-6 py-3 text-white inline-block">Vai alla Dashboard</Link></div></main>);
 }

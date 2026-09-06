@@ -1,6 +1,7 @@
 'use client';
 
-import { useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { AppHeader } from '@/components/layout/AppHeader';
 import { LevelCard } from './LevelCard';
 import { StatsGrid } from './StatsGrid';
@@ -11,11 +12,20 @@ import { livelli } from '@/lib/livelli-data';
 import { useProgresso } from '@/lib/xp';
 import { useStreak } from '@/lib/streak';
 
+
+const ACCESS_KEY = 'patente7_access';
+
 /**
  * Fase 2/3/4, Schermata 3 — Dashboard Premium: header (XP, progresso),
  * streak giornaliero, statistiche, badge sbloccabili e le 7 card missione.
  */
 export function DashboardClient() {
+  const router = useRouter();
+  const [ok,setOk]=useState(false);
+  useEffect(()=>{
+    if(localStorage.getItem(ACCESS_KEY)==='premium'){setOk(true);}else{router.replace('/');}
+  },[router]);
+  if(!ok) return null;
   const { progresso, pronto } = useProgresso();
   const streak = useStreak();
 

@@ -1,5 +1,7 @@
 import type { Metadata } from 'next';
 import { Hero } from '@/components/marketing/Hero';
+import { LaunchBanner } from '@/components/marketing/LaunchBanner';
+import { TrustBar } from '@/components/marketing/TrustBar';
 import { StatsStrip } from '@/components/marketing/StatsStrip';
 import { FeatureCards } from '@/components/marketing/FeatureCards';
 import { WhyItWorks } from '@/components/marketing/WhyItWorks';
@@ -17,6 +19,8 @@ export default function HomePage() {
   return (
     <>
       <Hero />
+      <LaunchBanner />
+      <TrustBar />
       <StatsStrip />
       <FeatureCards />
       <WhyItWorks />

@@ -1,0 +1,37 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    @apply border-nebbia;
+  }
+  body {
+    @apply bg-segnaletica text-asfalto;
+  }
+  ::selection {
+    @apply bg-superato/20;
+  }
+  :focus-visible {
+    outline: 2px solid theme('colors.segnale');
+    outline-offset: 2px;
+  }
+}
+
+@layer utilities {
+  .container-app {
+    @apply mx-auto w-full max-w-container px-5 md:px-10;
+  }
+}
+
+/* Rispetta le preferenze di riduzione del movimento dell'utente */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

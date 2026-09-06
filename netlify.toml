@@ -1,0 +1,14 @@
+[build]
+  command = "npm run build"
+  publish = "out"
+
+[build.environment]
+  NODE_VERSION = "20"
+
+# Sito 100% statico (next.config.js -> output: 'export'):
+# nessun plugin Netlify per Next.js necessario, nessuna funzione serverless.
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 404

@@ -7,7 +7,7 @@ import { cn } from '@/lib/utils';
 // Vedi README, sezione "Dove inserire Stripe".
 export const STRIPE_PAYMENT_LINKS: Record<string, string> = {
   base: 'https://buy.stripe.com/STRIPE_PAYMENT_LINK_BASE',
-  premium: 'https://buy.stripe.com/STRIPE_PAYMENT_LINK_PREMIUM',
+  premium: 'https://buy.stripe.com/5kQeVgc6egTle2p9KMdQQ00',
   pro: 'https://buy.stripe.com/STRIPE_PAYMENT_LINK_PRO',
 };
 

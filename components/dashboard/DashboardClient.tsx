@@ -28,7 +28,10 @@ export default function DashboardClient() {
 
   return (
     <div>
-      <AppHeader />
+     <AppHeader
+  xpTotale={progresso.xpTotale}
+  percentualeCompletamento={percentuale}
+/>
       <StatsGrid progresso={progresso} />
       <StreakIndicator streak={streak} />
       <BadgeShelf progresso={progresso} />

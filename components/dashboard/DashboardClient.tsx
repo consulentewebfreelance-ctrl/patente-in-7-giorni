@@ -22,12 +22,12 @@ const ACCESS_KEY = 'patente7_access';
 export function DashboardClient() {
   const router = useRouter();
   const [ok,setOk]=useState(false);
+  const { progresso, pronto } = useProgresso();
+  const streak = useStreak();
   useEffect(()=>{
     if(localStorage.getItem(ACCESS_KEY)==='premium'){setOk(true);}else{router.replace('/');}
   },[router]);
   if(!ok) return null;
-  const { progresso, pronto } = useProgresso();
-  const streak = useStreak();
 
   const completati = useMemo(
     () => livelli.filter((l) => progresso.livelli[l.id]?.stato === 'completato').length,

@@ -40,7 +40,7 @@ export default function DashboardClient() {
       />
       <StatsGrid progresso={progresso} />
       <StreakIndicator streak={streak} />
-      <BadgeShelf progresso={progresso} />
+      <BadgeShelf progresso={progresso} streak={streak} />
       <div className="grid gap-4">
         {livelli.map((livello) => (
           <LevelCard key={livello.id} livello={livello} progresso={progresso} />

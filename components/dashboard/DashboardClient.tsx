@@ -26,12 +26,18 @@ export default function DashboardClient() {
 
   if (!pronto) return null;
 
+  const completati = livelli.filter(
+    (l) => progresso.livelli[l.id]?.stato === 'completato'
+  ).length;
+
+  const percentuale = (completati / livelli.length) * 100;
+
   return (
     <div>
-     <AppHeader
-  xpTotale={progresso.xpTotale}
-  percentualeCompletamento={percentuale}
-/>
+      <AppHeader
+        xpTotale={progresso.xpTotale}
+        percentualeCompletamento={percentuale}
+      />
       <StatsGrid progresso={progresso} />
       <StreakIndicator streak={streak} />
       <BadgeShelf progresso={progresso} />

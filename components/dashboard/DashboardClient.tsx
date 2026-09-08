@@ -43,7 +43,13 @@ export default function DashboardClient() {
       <BadgeShelf progresso={progresso} streak={streak} />
       <div className="grid gap-4">
         {livelli.map((livello) => (
-          <LevelCard key={livello.id} livello={livello} progresso={progresso} />
+          <LevelCard
+            key={livello.id}
+            livello={livello}
+            stato={progresso.livelli[livello.id].stato}
+            xp={progresso.livelli[livello.id].xp}
+            totaleDomande={livello.quiz.length}
+          />
         ))}
       </div>
     </div>

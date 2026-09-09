@@ -1,7 +1,21 @@
-'use client';
-// elimina proprio questa riga
-import Link from 'next/link';
-import { CheckCircle2 } from 'lucide-react';
-export default function SuccessoPage(){
- return (<main className="min-h-screen flex items-center justify-center p-6"><div className="max-w-md text-center"><CheckCircle2 className="mx-auto mb-4 h-16 w-16 text-green-500"/><h1 className="text-3xl font-bold mb-3">Pagamento confermato!</h1><p className="mb-6">Il tuo accesso Premium è stato sbloccato.</p><Link href="/dashboard" className="rounded-xl bg-blue-600 px-6 py-3 text-white inline-block">Vai alla Dashboard</Link></div></main>);
+import type { Metadata } from 'next';
+import { Suspense } from 'react';
+import { SuccessoClient } from '@/components/marketing/SuccessoClient';
+
+export const metadata: Metadata = {
+  title: 'Pagamento confermato',
+  robots: { index: false }, // pagina di post-checkout, non va indicizzata
+};
+
+/**
+ * Fase 2/3/6, Schermata 7. Success URL da impostare nel Payment Link Stripe:
+ * https://tuosito.it/successo?session_id={CHECKOUT_SESSION_ID}
+ * (vedi README, sezione "Sicurezza dashboard").
+ */
+export default function SuccessoPage() {
+  return (
+    <Suspense fallback={null}>
+      <SuccessoClient />
+    </Suspense>
+  );
 }

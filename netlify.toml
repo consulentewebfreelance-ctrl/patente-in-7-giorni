@@ -5,8 +5,17 @@
 [build.environment]
   NODE_VERSION = "20"
 
-# Sito 100% statico (next.config.js -> output: 'export'):
-# nessun plugin Netlify per Next.js necessario, nessuna funzione serverless.
+# Sito statico (next.config.js -> output: 'export') + due funzioni serverless
+# minime in netlify/functions/ per verificare gli acquisti Stripe e servire il
+# contenuto protetto dei livelli. Nessun plugin Netlify per Next.js necessario:
+# le funzioni sono indipendenti dall'export statico del sito.
+[functions]
+  directory = "netlify/functions"
+
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/:splat"
+  status = 200
 
 [[redirects]]
   from = "/*"

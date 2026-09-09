@@ -4,10 +4,10 @@ import { Badge } from '@/components/ui/Badge';
 import { ProgressBar } from '@/components/ui/ProgressBar';
 import { Button } from '@/components/ui/Button';
 import { cn } from '@/lib/utils';
-import type { Livello } from '@/lib/livelli-data';
+import type { LivelloMeta } from '@/lib/livelli-data';
 import type { StatoLivello } from '@/lib/xp';
 
-const icone: Record<Livello['icona'], typeof TrafficCone> = {
+const icone: Record<LivelloMeta['icona'], typeof TrafficCone> = {
   segnali: TrafficCone,
   precedenze: ArrowRightCircle,
   incroci: TriangleAlert,
@@ -23,14 +23,16 @@ export function LevelCard({
   xp,
   totaleDomande,
 }: {
-  livello: Livello;
+  livello: LivelloMeta;
   stato: StatoLivello;
   xp: number;
   totaleDomande: number;
 }) {
   const Icona = icone[livello.icona];
   const bloccato = stato === 'bloccato';
-  const percentuale = totaleDomande > 0 ? Math.min(100, (livello.quiz.filter((_, i) => i < xp / 10).length / totaleDomande) * 100) : 0;
+  // Ogni risposta corretta vale 10 XP: min(domande "coperte" dagli XP, totale) è
+  // equivalente a filtrare l'array delle domande per indice, ma senza doverlo avere qui.
+  const percentuale = totaleDomande > 0 ? Math.min(100, (Math.min(xp / 10, totaleDomande) / totaleDomande) * 100) : 0;
 
   const contenuto = (
     <div

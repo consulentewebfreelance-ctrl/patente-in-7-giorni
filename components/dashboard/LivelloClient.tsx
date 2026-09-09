@@ -11,7 +11,7 @@ import { MnemonicTrick } from '@/components/lesson/MnemonicTrick';
 import { CommonMistakes } from '@/components/lesson/CommonMistakes';
 import { FlashcardDeck } from '@/components/lesson/FlashcardDeck';
 import { useProgresso } from '@/lib/xp';
-import type { Livello } from '@/lib/livelli-data';
+import { useLivelloProtetto } from '@/lib/access';
 
 // Caricato solo quando l'utente clicca "Inizia Quiz" (Fase 4 §8: riduce il bundle iniziale).
 const QuizRunner = dynamic(() => import('@/components/lesson/QuizRunner').then((m) => m.QuizRunner), {
@@ -20,8 +20,32 @@ const QuizRunner = dynamic(() => import('@/components/lesson/QuizRunner').then((
 
 type Step = 'lezione' | 'quiz' | 'completato';
 
-/** Fase 2/3, Schermata 4 + 5: missione completa (lezione -> quiz) con progresso salvato in locale. */
-export function LivelloClient({ livello, prossimoLivelloId }: { livello: Livello; prossimoLivelloId?: string }) {
+function LivelloSkeleton() {
+  return (
+    <div>
+      <div className="h-[64px] animate-pulse bg-nebbia" />
+      <div className="container-app max-w-[640px] py-8 md:py-12">
+        <div className="flex flex-col gap-4">
+          <div className="h-4 w-24 animate-pulse rounded bg-nebbia" />
+          <div className="h-8 w-2/3 animate-pulse rounded bg-nebbia" />
+          <div className="h-24 animate-pulse rounded-lg bg-nebbia" />
+          <div className="h-24 animate-pulse rounded-lg bg-nebbia" />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/**
+ * Fase 2/3, Schermata 4 + 5 — Fase 6: missione completa (lezione -> quiz).
+ * Il contenuto vero (lezione, trucco, errori, flashcard, quiz) non è più
+ * incluso staticamente nella pagina: viene richiesto a
+ * netlify/functions/get-livello-content.ts solo dopo aver verificato
+ * l'acquisto (vedi lib/access.ts). Se l'accesso non è valido, l'hook
+ * reindirizza automaticamente alla home.
+ */
+export function LivelloClient({ id, prossimoLivelloId }: { id: string; prossimoLivelloId?: string }) {
+  const { stato: statoAccesso, livello } = useLivelloProtetto(id);
   const { progresso, pronto, registraRispostaCorretta, completaLivello } = useProgresso();
   const [step, setStep] = useState<Step>('lezione');
 
@@ -30,8 +54,21 @@ export function LivelloClient({ livello, prossimoLivelloId }: { livello: Livello
     ? (Object.values(progresso.livelli).filter((l) => l.stato === 'completato').length / Object.keys(progresso.livelli).length) * 100
     : 0;
 
+  if (statoAccesso !== 'pronto' || !livello) {
+    if (statoAccesso === 'errore') {
+      return (
+        <div className="container-app flex min-h-[60vh] flex-col items-center justify-center gap-4 py-16 text-center">
+          <p className="font-display text-[18px] font-bold">Non riusciamo a caricare questo livello</p>
+          <p className="max-w-[360px] text-[14px] text-ardesia">Riprova tra qualche istante o torna alla dashboard.</p>
+          <ButtonLink href="/dashboard">Torna alla Dashboard</ButtonLink>
+        </div>
+      );
+    }
+    return <LivelloSkeleton />;
+  }
+
   const handleCompletaQuiz = () => {
-    completaLivello(livello.id, prossimoLivelloId);
+    completaLivello(id, prossimoLivelloId);
     setStep('completato');
   };
 
@@ -91,7 +128,7 @@ export function LivelloClient({ livello, prossimoLivelloId }: { livello: Livello
             >
               <QuizRunner
                 domande={livello.quiz}
-                onRispostaCorretta={(i) => registraRispostaCorretta(livello.id, i)}
+                onRispostaCorretta={(i) => registraRispostaCorretta(id, i)}
                 onCompletato={handleCompletaQuiz}
               />
             </motion.div>

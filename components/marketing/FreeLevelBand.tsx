@@ -13,7 +13,7 @@ export function FreeLevelBand() {
           Prova gratis il Livello 1
         </h2>
         <p className="max-w-[440px] text-[15px] text-ardesia">
-          Lezione, flashcard e {livello1.quiz.length} domande in stile esame su &ldquo;{livello1.titolo}&rdquo; — senza carta di credito, senza impegno.
+          Lezione, flashcard e {livello1.quizCount} domande in stile esame su &ldquo;{livello1.titolo}&rdquo; — senza carta di credito, senza impegno.
         </p>
         <ButtonLink href="/demo" variante="secondario" className="bg-segnaletica">
           Inizia la Demo Gratuita

@@ -1,56 +1,89 @@
 'use client';
 
-import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useMemo } from 'react';
 import { AppHeader } from '@/components/layout/AppHeader';
+import { LevelCard } from './LevelCard';
 import { StatsGrid } from './StatsGrid';
 import { BadgeShelf } from './BadgeShelf';
 import { StreakIndicator } from './StreakIndicator';
-import { LevelCard } from './LevelCard';
+import { ProgressoTappe } from '@/components/ui/ProgressBar';
 import { livelli } from '@/lib/livelli-data';
 import { useProgresso } from '@/lib/xp';
 import { useStreak } from '@/lib/streak';
+import { useRichiedeAcquisto } from '@/lib/access';
 
-const ACCESS_KEY = 'patente7_access';
+function DashboardSkeleton() {
+  // Skeleton semplice invece di uno spinner, coerente con le linee guida micro-interazioni.
+  return (
+    <div>
+      <div className="h-[64px] animate-pulse bg-nebbia" />
+      <div className="container-app py-8">
+        <div className="mb-6 grid grid-cols-2 gap-3 md:grid-cols-4">
+          {Array.from({ length: 4 }).map((_, i) => (
+            <div key={i} className="h-[84px] animate-pulse rounded-lg bg-nebbia" />
+          ))}
+        </div>
+        <div className="flex flex-col gap-3">
+          {Array.from({ length: 7 }).map((_, i) => (
+            <div key={i} className="h-[72px] animate-pulse rounded-lg bg-nebbia" />
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
 
-export default function DashboardClient() {
-  const router = useRouter();
+/**
+ * Fase 2/3/4, Schermata 3 — Dashboard Premium: header (XP, progresso),
+ * streak giornaliero, statistiche, badge sbloccabili e le 7 card missione.
+ *
+ * Accesso: useRichiedeAcquisto() reindirizza alla home se non risulta un
+ * acquisto verificato con Stripe (vedi lib/access.ts e netlify/functions/).
+ */
+export function DashboardClient() {
+  const accessoVerificato = useRichiedeAcquisto();
   const { progresso, pronto } = useProgresso();
   const streak = useStreak();
 
-  useEffect(() => {
-    if (localStorage.getItem(ACCESS_KEY) !== 'premium') {
-      router.replace('/');
-    }
-  }, [router]);
-
-  if (!pronto) return null;
-
-  const completati = livelli.filter(
-    (l) => progresso.livelli[l.id]?.stato === 'completato'
-  ).length;
-
+  const completati = useMemo(
+    () => livelli.filter((l) => progresso.livelli[l.id]?.stato === 'completato').length,
+    [progresso]
+  );
   const percentuale = (completati / livelli.length) * 100;
+
+  if (!accessoVerificato || !pronto) {
+    return <DashboardSkeleton />;
+  }
 
   return (
     <div>
-      <AppHeader
-        xpTotale={progresso.xpTotale}
-        percentualeCompletamento={percentuale}
-      />
-      <StatsGrid progresso={progresso} />
-      <StreakIndicator streak={streak} />
-      <BadgeShelf progresso={progresso} streak={streak} />
-      <div className="grid gap-4">
-        {livelli.map((livello) => (
-          <LevelCard
-            key={livello.id}
-            livello={livello}
-            stato={progresso.livelli[livello.id].stato}
-            xp={progresso.livelli[livello.id].xp}
-            totaleDomande={livello.quiz.length}
-          />
-        ))}
+      <AppHeader xpTotale={progresso.xpTotale} percentualeCompletamento={percentuale} />
+      <div className="container-app flex flex-col gap-10 py-8 md:py-12">
+        <div>
+          <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+            <h1 className="font-display text-[24px] font-bold">La tua dashboard</h1>
+            <StreakIndicator streak={streak} />
+          </div>
+          <StatsGrid progresso={progresso} />
+        </div>
+
+        <BadgeShelf progresso={progresso} streak={streak} />
+
+        <div>
+          <div className="mb-4 flex items-center justify-between">
+            <h2 className="font-display text-[16px] font-bold">I tuoi livelli</h2>
+            <ProgressoTappe totale={livelli.length} completate={completati} />
+          </div>
+          <div className="flex flex-col gap-3">
+            {livelli.map((livello) => {
+              const stato = progresso.livelli[livello.id]?.stato ?? 'bloccato';
+              const xp = progresso.livelli[livello.id]?.xp ?? 0;
+              return (
+                <LevelCard key={livello.id} livello={livello} stato={stato} xp={xp} totaleDomande={livello.quizCount} />
+              );
+            })}
+          </div>
+        </div>
       </div>
     </div>
   );

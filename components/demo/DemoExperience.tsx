@@ -8,7 +8,7 @@ import { ButtonLink, Button } from '@/components/ui/Button';
 import { MnemonicTrick } from '@/components/lesson/MnemonicTrick';
 import { CommonMistakes } from '@/components/lesson/CommonMistakes';
 import { FlashcardDeck } from '@/components/lesson/FlashcardDeck';
-import { livelli } from '@/lib/livelli-data';
+import { livelloDemo } from '@/lib/demo-livello';
 
 const QuizRunner = dynamic(() => import('@/components/lesson/QuizRunner').then((m) => m.QuizRunner), {
   loading: () => <div className="h-[320px] animate-pulse rounded-lg bg-nebbia" />,
@@ -16,7 +16,6 @@ const QuizRunner = dynamic(() => import('@/components/lesson/QuizRunner').then((
 
 type Step = 'lezione' | 'quiz' | 'finale';
 
-const livelloDemo = livelli[0]; // "Segnali": livello 1 completo, usato come demo gratuita
 
 /** Fase 3: demo gratuita — livello 1 completo, 5 domande, CTA finale di sblocco. Nessun XP salvato. */
 export function DemoExperience() {

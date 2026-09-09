@@ -21,5 +21,5 @@ export default function LivelloPage({ params }: { params: { id: string } }) {
   const livello = getLivelloById(params.id);
   if (!livello) notFound();
 
-  return <LivelloClient livello={livello} prossimoLivelloId={getProssimoLivelloId(params.id)} />;
+  return <LivelloClient id={params.id} prossimoLivelloId={getProssimoLivelloId(params.id)} />;
 }

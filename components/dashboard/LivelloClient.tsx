@@ -169,7 +169,7 @@ export function LivelloClient({ id, prossimoLivelloId }: { id: string; prossimoL
     registraProgressoMissione('boss');
 
     const secondiImpiegati = Math.round((Date.now() - tempoInizio) / 1000);
-    const stelle = calcolaStelle(corretteQuiz, livello.quiz.length, secondiImpiegati, 12);
+    const stelle = calcolaStelle(corretteQuiz, livello!.quiz.length, secondiImpiegati, 12);
     setStelleFinali(stelle);
     setXpGuadagnatiLivello((x) => x + 100);
     completaLivello(id, prossimoLivelloId, stelle);

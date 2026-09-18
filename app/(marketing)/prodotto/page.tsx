@@ -6,7 +6,9 @@ import { PhoneMockup } from '@/components/mockups/PhoneMockup';
 import { BrowserMockup } from '@/components/mockups/BrowserMockup';
 import { Timeline } from '@/components/marketing/Timeline';
 import { PricingCards } from '@/components/marketing/PricingCard';
+import { ComparisonTable } from '@/components/marketing/ComparisonTable';
 import { FAQAccordion } from '@/components/marketing/FAQAccordion';
+import { SocialProof } from '@/components/marketing/SocialProof';
 import { ButtonLink } from '@/components/ui/Button';
 
 export const metadata: Metadata = {
@@ -19,11 +21,14 @@ export default function ProdottoPage() {
     <div className="pb-16 pt-14 md:pb-24 md:pt-20">
       <section className="container-app flex flex-col items-center gap-4 text-center">
         <h1 className="max-w-[640px] font-display text-[32px] font-bold leading-tight md:text-[48px]">
-          Tutto il metodo, in un unico posto
+          Un percorso guidato, passo dopo passo, fino all&apos;esame
         </h1>
-        <p className="max-w-[520px] text-[16px] text-ardesia md:text-[18px]">
-          PDF, dashboard, flashcard e quiz — organizzati negli stessi 7 giorni che hai già visto in homepage.
+        <p className="max-w-[540px] text-[16px] text-ardesia md:text-[18px]">
+          Quiz illimitati, simulazioni realistiche e un Tutor AI pronto a spiegarti ogni dubbio — organizzati negli stessi 7 giorni che hai già visto in homepage.
         </p>
+        <ButtonLink href="#prezzi" className="mt-2">
+          Inizia oggi
+        </ButtonLink>
       </section>
 
       <section className="container-app mt-14 grid gap-8 md:grid-cols-3 md:gap-6">
@@ -44,6 +49,13 @@ export default function ProdottoPage() {
         <PricingCards />
       </section>
 
+      <section className="container-app mt-12 md:mt-16">
+        <h2 className="mb-6 text-center font-display text-[20px] font-bold md:text-[24px]">Confronto dettagliato</h2>
+        <ComparisonTable />
+      </section>
+
+      <SocialProof />
+
       <section className="mt-20 border-t border-nebbia bg-nebbia py-16 md:mt-28 md:py-24">
         <div className="container-app">
           <h2 className="mb-10 text-center font-display text-[24px] font-bold md:text-[32px]">Domande frequenti</h2>
@@ -55,7 +67,7 @@ export default function ProdottoPage() {
         <h2 className="max-w-[480px] font-display text-[28px] font-bold leading-tight">
           Parti da oggi. L&apos;esame non aspetta.
         </h2>
-        <ButtonLink href="#prezzi">Prendi il Tuo Piano</ButtonLink>
+        <ButtonLink href="#prezzi">Inizia oggi</ButtonLink>
       </section>
     </div>
   );

@@ -11,6 +11,7 @@ export type ProgressoLivello = {
   stato: StatoLivello;
   xp: number;
   domandeCorrette: number[];
+  stelle?: number;
 };
 
 export type Progresso = {
@@ -89,21 +90,36 @@ export function useProgresso() {
     });
   }, []);
 
-  const completaLivello = useCallback((livelloId: string, prossimoLivelloId?: string) => {
+  const completaLivello = useCallback((livelloId: string, prossimoLivelloId?: string, stelle?: number) => {
     setProgresso((prev) => {
       const livelloPrec = prev.livelli[livelloId];
-      if (!livelloPrec || livelloPrec.stato === 'completato') return prev;
+      if (!livelloPrec) return prev;
+      const giaCompletato = livelloPrec.stato === 'completato';
+      const xpBonus = giaCompletato ? 0 : 50;
 
       const livelliAgg: Record<string, ProgressoLivello> = {
         ...prev.livelli,
-        [livelloId]: { ...livelloPrec, stato: 'completato', xp: livelloPrec.xp + 50 },
+        [livelloId]: {
+          ...livelloPrec,
+          stato: 'completato',
+          xp: livelloPrec.xp + xpBonus,
+          stelle: stelle !== undefined ? Math.max(livelloPrec.stelle ?? 0, stelle) : livelloPrec.stelle,
+        },
       };
 
       if (prossimoLivelloId && livelliAgg[prossimoLivelloId]?.stato === 'bloccato') {
         livelliAgg[prossimoLivelloId] = { ...livelliAgg[prossimoLivelloId], stato: 'in-corso' };
       }
 
-      const nuovo: Progresso = { xpTotale: prev.xpTotale + 50, livelli: livelliAgg };
+      const nuovo: Progresso = { xpTotale: prev.xpTotale + xpBonus, livelli: livelliAgg };
+      scriviSuLocalStorage(nuovo);
+      return nuovo;
+    });
+  }, []);
+
+  const aggiungiXPBonus = useCallback((quantita: number) => {
+    setProgresso((prev) => {
+      const nuovo: Progresso = { ...prev, xpTotale: prev.xpTotale + quantita };
       scriviSuLocalStorage(nuovo);
       return nuovo;
     });
@@ -115,5 +131,5 @@ export function useProgresso() {
     setProgresso(nuovo);
   }, []);
 
-  return { progresso, pronto, registraRispostaCorretta, completaLivello, reset };
+  return { progresso, pronto, registraRispostaCorretta, completaLivello, aggiungiXPBonus, reset };
 }

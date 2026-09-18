@@ -5,11 +5,12 @@ import { Lock } from 'lucide-react';
 import { calcolaBadgeSbloccati } from '@/lib/achievements';
 import type { Progresso } from '@/lib/xp';
 import type { Streak } from '@/lib/streak';
+import type { RecordGiochi } from '@/lib/gameRecords';
 import { cn } from '@/lib/utils';
 
-/** Fase 4, §1: badge sbloccabili, calcolati dallo stato di progresso e streak esistenti. */
-export function BadgeShelf({ progresso, streak }: { progresso: Progresso; streak: Streak }) {
-  const badge = calcolaBadgeSbloccati(progresso, streak);
+/** Fase 4/Fase 2: badge sbloccabili, calcolati da progresso, streak e record di gioco esistenti. */
+export function BadgeShelf({ progresso, streak, record }: { progresso: Progresso; streak: Streak; record: RecordGiochi }) {
+  const badge = calcolaBadgeSbloccati(progresso, streak, record);
 
   return (
     <div>
@@ -22,8 +23,10 @@ export function BadgeShelf({ progresso, streak }: { progresso: Progresso; streak
             animate={b.ottenuto ? { scale: 1, opacity: 1 } : {}}
             transition={{ duration: 0.4, delay: i * 0.03, ease: 'easeOut' }}
             className={cn(
-              'flex flex-col items-center gap-1.5 rounded-lg border p-3 text-center',
-              b.ottenuto ? 'border-superato/30 bg-superato/[0.06]' : 'border-asfalto/[0.06] bg-nebbia opacity-60'
+              'flex flex-col items-center gap-1.5 rounded-lg border p-3 text-center transition-shadow',
+              b.ottenuto
+                ? 'border-superato/30 bg-superato/[0.06] shadow-[0_0_16px_rgba(23,201,100,0.25)]'
+                : 'border-asfalto/[0.06] bg-nebbia opacity-60'
             )}
             title={b.descrizione}
           >

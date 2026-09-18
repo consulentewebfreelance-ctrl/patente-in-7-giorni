@@ -6,6 +6,7 @@ import { Check, X } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { ProgressBar } from '@/components/ui/ProgressBar';
 import { XPGainToast } from '@/components/dashboard/XPGainToast';
+import { registraProgressoMissione } from '@/lib/missions';
 import { cn } from '@/lib/utils';
 import type { Domanda } from '@/lib/livelli-data';
 
@@ -41,6 +42,7 @@ export function QuizRunner({ domande, onRispostaCorretta, onCompletato, numerazi
       setMostraToast(true);
       window.setTimeout(() => setMostraToast(false), 700);
       onRispostaCorretta(indice);
+      registraProgressoMissione('quiz');
     }
   };
 

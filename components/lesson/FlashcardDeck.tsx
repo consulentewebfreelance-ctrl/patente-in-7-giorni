@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { motion, AnimatePresence, PanInfo } from 'framer-motion';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import type { Flashcard } from '@/lib/livelli-data';
+import { registraProgressoMissione } from '@/lib/missions';
 
 /**
  * Flashcard con flip 3D al tap/Invio e swipe orizzontale per navigare
@@ -13,6 +14,14 @@ import type { Flashcard } from '@/lib/livelli-data';
 export function FlashcardDeck({ carte }: { carte: Flashcard[] }) {
   const [indice, setIndice] = useState(0);
   const [girata, setGirata] = useState(false);
+
+  const girala = () => {
+    setGirata((g) => {
+      const nuovo = !g;
+      if (nuovo) registraProgressoMissione('flashcard'); // conta solo quando si scopre la risposta
+      return nuovo;
+    });
+  };
 
   const vaiA = (nuovoIndice: number) => {
     if (nuovoIndice < 0 || nuovoIndice >= carte.length) return;
@@ -28,7 +37,7 @@ export function FlashcardDeck({ carte }: { carte: Flashcard[] }) {
   const onKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault();
-      setGirata((g) => !g);
+      girala();
     } else if (e.key === 'ArrowRight') {
       vaiA(indice + 1);
     } else if (e.key === 'ArrowLeft') {
@@ -62,7 +71,7 @@ export function FlashcardDeck({ carte }: { carte: Flashcard[] }) {
               exit={{ opacity: 0, x: -24 }}
               transition={{ duration: 0.2 }}
               className="absolute inset-0 cursor-grab active:cursor-grabbing"
-              onClick={() => setGirata((g) => !g)}
+              onClick={girala}
               onKeyDown={onKeyDown}
               tabIndex={0}
               role="button"
